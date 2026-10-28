@@ -43,11 +43,11 @@
 
 ## 它怎么运转
 
-<img src="docs/skill-architecture-flow.svg" alt="架构与数据流转：一句话触发 → SKILL.md 路由 → references 按需加载 → 落盘到项目 → 下一轮开工读副本" width="100%">
-
 一句话触发 → 主入口路由 → 按需读细节 → 产物落进项目目录 → 下一轮「开工」从落盘处接上。
 
-主线上的光点是数据流，底下那条虚线是回环。**技能本身不存状态**：状态全部落在项目里（规则副本、看板、项目宪法、记忆），所以换一个对话，读回那几份文件就能接上。
+技能本身不存状态：状态全部落在项目里（规则副本、看板、项目宪法、记忆），所以换一个对话，读回那几份文件就能接上。
+
+架构与数据流转图见 [`assets/skill-architecture-flow.svg`](assets/skill-architecture-flow.svg)。
 
 ## 装上它
 
@@ -82,14 +82,13 @@ workbuddy-z-kongjian/
 │   ├── 环境注意.md          Windows 环境实测踩坑（路径、回收站、编码）
 │   ├── project-rules.md     规则文件原件
 │   └── 复盘与并行.md        阶段复盘、多会话并行
-├── assets/                  模板：新项目时复制出去的骨架
+├── assets/                  模板与图示：新项目时复制出去的骨架
 │   ├── WORKBUDDY.md         项目宪法模板
 │   ├── 工作空间规则-本项目.md
-│   └── 看板.html            项目看板模板
+│   ├── 看板.html            项目看板模板
+│   └── skill-architecture-flow.svg   架构与数据流转图
 ├── scripts/
 │   └── 体检.py              目录体检脚本
-└── docs/
-    └── skill-architecture-flow.svg   上面那张架构图
 ```
 
 ## 环境要求
@@ -112,3 +111,7 @@ workbuddy-z-kongjian/
 - **相同方式共享** —— 改后的版本用同一个许可证发布
 
 法律全文见 [LICENSE](LICENSE)。要商用请另外联系我。
+
+## 使用范围
+
+本项目仅用于协议学习、研究与个人自用，禁止商业转售。具体授权条款见 [LICENSE](LICENSE)。
