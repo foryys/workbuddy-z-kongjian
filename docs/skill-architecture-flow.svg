@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" width="1000" height="620" role="img" aria-label="工作空间优化技能的架构与数据流转">
+  <title>工作空间优化技能 · 架构与数据流转</title>
+  <desc>一句话触发 → SKILL.md 路由 → references 按需加载 → 落盘到项目 → 下一轮开工读副本，闭环循环。支撑件为 assets 模板与 scripts 体检脚本。</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#94A3B8"/>
+    </marker>
+    <marker id="arrowBack" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="620" fill="#FFFFFF"/>
+
+  <!-- ================= 通道：数据流 ================= -->
+  <line id="mainflow" x1="125" y1="340" x2="865" y2="340" stroke="#CBD5E1" stroke-width="2"/>
+  <line x1="125" y1="322" x2="125" y2="340" stroke="#CBD5E1" stroke-width="2"/>
+  <line x1="360" y1="300" x2="360" y2="340" stroke="#CBD5E1" stroke-width="2"/>
+  <line x1="620" y1="300" x2="620" y2="340" stroke="#CBD5E1" stroke-width="2"/>
+  <line x1="860" y1="300" x2="860" y2="340" stroke="#CBD5E1" stroke-width="2"/>
+  <polygon points="238,334 250,340 238,346" fill="#94A3B8"/>
+  <polygon points="488,334 500,340 488,346" fill="#94A3B8"/>
+  <polygon points="738,334 750,340 738,346" fill="#94A3B8"/>
+
+  <text x="243" y="330" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="11" fill="#64748B">触发 · 路由</text>
+  <text x="490" y="330" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="11" fill="#64748B">按需读细节</text>
+  <text x="740" y="330" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="11" fill="#64748B">产出落盘</text>
+
+  <!-- ================= ① 触发 ================= -->
+  <rect x="40" y="60" width="170" height="260" rx="10" fill="#F8FAFC" stroke="#CBD5E1"/>
+  <text x="54" y="86" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="13" font-weight="700" fill="#0F172A">① 你说一句话</text>
+  <text x="54" y="104" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="10.5" fill="#64748B">不用记命令，意思到就行</text>
+
+  <g font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="12" fill="#1E293B">
+    <rect x="52" y="116" width="146" height="28" rx="14" fill="#FFFFFF" stroke="#CBD5E1"/>
+    <text x="125" y="135" text-anchor="middle">启动项目</text>
+    <rect x="52" y="150" width="146" height="28" rx="14" fill="#FFFFFF" stroke="#CBD5E1"/>
+    <text x="125" y="169" text-anchor="middle">接手项目</text>
+    <rect x="52" y="184" width="146" height="28" rx="14" fill="#FFFFFF" stroke="#CBD5E1"/>
+    <text x="125" y="203" text-anchor="middle">升级项目</text>
+    <rect x="52" y="218" width="146" height="28" rx="14" fill="#FFFFFF" stroke="#CBD5E1"/>
+    <text x="125" y="237" text-anchor="middle">开工</text>
+    <rect x="52" y="252" width="146" height="28" rx="14" fill="#FFFFFF" stroke="#CBD5E1"/>
+    <text x="125" y="271" text-anchor="middle">收尾</text>
+    <rect x="52" y="286" width="146" height="28" rx="14" fill="#FFFFFF" stroke="#CBD5E1"/>
+    <text x="125" y="305" text-anchor="middle">瘦身 · 体检</text>
+  </g>
+
+  <!-- ================= ② 主入口 ================= -->
+  <rect x="250" y="60" width="220" height="240" rx="10" fill="#F8FAFC" stroke="#CBD5E1"/>
+  <text x="264" y="86" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="13" font-weight="700" fill="#0F172A">② SKILL.md</text>
+  <text x="264" y="104" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="10.5" fill="#64748B">主入口，每轮都读</text>
+  <g font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="11.5" fill="#334155">
+    <text x="264" y="134">功能地图：一次只走一条路</text>
+    <text x="264" y="156">五条主路 ＋ 三条备用</text>
+    <text x="264" y="178">铁律 5 条 · 判不准就问</text>
+    <text x="264" y="200">判定总表：同一数字只认一处</text>
+    <text x="264" y="222">默认最轻：砍仪式，不砍任务</text>
+  </g>
+  <rect x="264" y="238" width="192" height="44" rx="8" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="276" y="256" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="10.5" fill="#1D4ED8">先定多重 → 再过减件关</text>
+  <text x="276" y="272" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="10.5" fill="#1D4ED8">一条线只交一件主产物</text>
+
+  <!-- ================= ③ 细节文档 ================= -->
+  <rect x="510" y="60" width="220" height="240" rx="10" fill="#F8FAFC" stroke="#CBD5E1"/>
+  <text x="524" y="86" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="13" font-weight="700" fill="#0F172A">③ references/</text>
+  <text x="524" y="104" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="10.5" fill="#64748B">九份细节，用到哪份读哪份</text>
+
+  <rect x="518" y="121" width="204" height="16" rx="3" fill="#DBEAFE" opacity="0.85">
+    <animate attributeName="y" values="121;138;155;172;189;206;223;240;257" dur="10.8s" calcMode="discrete" repeatCount="indefinite"/>
+  </rect>
+
+  <g font-family="PingFang SC, Microsoft YaHei, sans-serif" fill="#334155">
+    <text x="524" y="132" font-size="10">新项目.md</text>
+    <text x="722" y="132" font-size="9.5" fill="#64748B" text-anchor="end">三步开干</text>
+    <text x="524" y="149" font-size="10">接手项目.md</text>
+    <text x="722" y="149" font-size="9.5" fill="#64748B" text-anchor="end">加壳不改件</text>
+    <text x="524" y="166" font-size="10">开工.md</text>
+    <text x="722" y="166" font-size="9.5" fill="#64748B" text-anchor="end">读入有预算</text>
+    <text x="524" y="183" font-size="10">收尾.md</text>
+    <text x="722" y="183" font-size="9.5" fill="#64748B" text-anchor="end">清退五判据</text>
+    <text x="524" y="200" font-size="10">目录纪律.md</text>
+    <text x="722" y="200" font-size="9.5" fill="#64748B" text-anchor="end">硬上限</text>
+    <text x="524" y="217" font-size="10">环境注意.md</text>
+    <text x="722" y="217" font-size="9.5" fill="#64748B" text-anchor="end">Windows 坑</text>
+    <text x="524" y="234" font-size="10">project-rules.md</text>
+    <text x="722" y="234" font-size="9.5" fill="#64748B" text-anchor="end">规则原件</text>
+    <text x="524" y="251" font-size="10">复盘与并行.md</text>
+    <text x="722" y="251" font-size="9.5" fill="#64748B" text-anchor="end">并行三证</text>
+    <text x="524" y="268" font-size="10">changelog.md</text>
+    <text x="722" y="268" font-size="9.5" fill="#64748B" text-anchor="end">只留三条</text>
+  </g>
+
+  <!-- ================= ④ 落盘 ================= -->
+  <rect x="770" y="60" width="180" height="240" rx="10" fill="#F8FAFC" stroke="#CBD5E1"/>
+  <text x="784" y="86" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="13" font-weight="700" fill="#0F172A">④ 落盘到项目</text>
+  <text x="784" y="104" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="10.5" fill="#64748B">下一轮从这里接上</text>
+
+  <g font-family="PingFang SC, Microsoft YaHei, sans-serif">
+    <rect x="784" y="116" width="152" height="30" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+        <text x="794" y="136" font-size="10.5" fill="#0F172A">output/</text>
+    <text x="926" y="136" font-size="9.5" fill="#64748B" text-anchor="end">主产物</text>
+    <rect x="784" y="152" width="152" height="30" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+        <text x="794" y="172" font-size="8.5" fill="#0F172A">.workbuddy/rules/</text>
+    <text x="926" y="172" font-size="9.5" fill="#64748B" text-anchor="end">规则副本</text>
+    <rect x="784" y="188" width="152" height="30" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+        <text x="794" y="208" font-size="10.5" fill="#0F172A">看板.html</text>
+    <text x="926" y="208" font-size="9.5" fill="#64748B" text-anchor="end">进度视图</text>
+    <rect x="784" y="224" width="152" height="30" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+        <text x="794" y="244" font-size="10.5" fill="#0F172A">WORKBUDDY.md</text>
+    <text x="926" y="244" font-size="9.5" fill="#64748B" text-anchor="end">项目宪法</text>
+    <rect x="784" y="260" width="152" height="30" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+        <text x="794" y="280" font-size="8.5" fill="#0F172A">.workbuddy/memory/</text>
+    <text x="926" y="280" font-size="9.5" fill="#64748B" text-anchor="end">项目记忆</text>
+  </g>
+
+  <!-- ================= 支撑件 ================= -->
+  <rect x="250" y="390" width="650" height="130" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-dasharray="5 4"/>
+  <text x="266" y="414" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="12" font-weight="700" fill="#0F172A">支撑件：模板与脚本</text>
+  <text x="404" y="414" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="10.5" fill="#64748B">复制出去用，不随对话走</text>
+
+  <rect x="266" y="428" width="300" height="76" rx="8" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="278" y="450" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="11.5" font-weight="700" fill="#0F172A">assets/ · 三份模板</text>
+  <text x="278" y="470" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="10.5" fill="#475569">WORKBUDDY.md · 看板.html</text>
+  <text x="278" y="488" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="10.5" fill="#475569">工作空间规则-本项目.md</text>
+
+  <rect x="584" y="428" width="300" height="76" rx="8" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="596" y="450" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="11.5" font-weight="700" fill="#0F172A">scripts/体检.py · 只读</text>
+  <text x="596" y="470" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="10.5" fill="#475569">目录五项 ＋ 体积六项</text>
+  <text x="596" y="488" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="10.5" fill="#475569">不合格项标 ⚠️，不改任何文件</text>
+
+  <!-- ================= 回流 ================= -->
+  <path d="M940,300 V560 H70 V332" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-dasharray="7 6" marker-end="url(#arrowBack)" opacity="0.75">
+    <animate attributeName="stroke-dashoffset" values="0;26" dur="1.4s" repeatCount="indefinite"/>
+  </path>
+  <text x="520" y="552" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="11" fill="#2563EB">下一轮「开工」读副本 → 回到主入口，闭环接上</text>
+
+  <!-- ================= 动态光点 ================= -->
+  <g fill="#2563EB">
+    <circle cx="125" cy="340" r="4.5" opacity="0">
+      <animate attributeName="cx" values="125;865" dur="4.2s" begin="0s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.06;0.92;1" dur="4.2s" begin="0s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="125" cy="340" r="4.5" opacity="0">
+      <animate attributeName="cx" values="125;865" dur="4.2s" begin="1.4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.06;0.92;1" dur="4.2s" begin="1.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="125" cy="340" r="4.5" opacity="0">
+      <animate attributeName="cx" values="125;865" dur="4.2s" begin="2.8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.06;0.92;1" dur="4.2s" begin="2.8s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- ================= 依次高亮 ================= -->
+  <g fill="none" stroke="#2563EB" stroke-width="2">
+    <rect x="40" y="60" width="170" height="260" rx="10" opacity="0">
+      <animate attributeName="opacity" values="0;0.95;0.95;0;0" keyTimes="0;0.04;0.18;0.24;1" dur="9s" begin="0s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="250" y="60" width="220" height="240" rx="10" opacity="0">
+      <animate attributeName="opacity" values="0;0.95;0.95;0;0" keyTimes="0;0.04;0.18;0.24;1" dur="9s" begin="2.25s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="510" y="60" width="220" height="240" rx="10" opacity="0">
+      <animate attributeName="opacity" values="0;0.95;0.95;0;0" keyTimes="0;0.04;0.18;0.24;1" dur="9s" begin="4.5s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="770" y="60" width="180" height="240" rx="10" opacity="0">
+      <animate attributeName="opacity" values="0;0.95;0.95;0;0" keyTimes="0;0.04;0.18;0.24;1" dur="9s" begin="6.75s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+</svg>

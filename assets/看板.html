@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>项目看板 · {{项目名}}</title>
+<!--
+  项目看板模板 —— 唯一给用户看的界面。单文件多视图：总览 / {{子视图名}}（靠入口卡 ＋ 脚本切换，hash 仅作同步 #home #sub）。
+  ※ **刷的时机**：产物状态变 ／ 有新决定 ／ 待办增删 —— 任一条出现就**当轮立刻刷**，不等收尾、不等用户问。
+  ※ 结构（2026-10-13 定版）= **主线（连体色带 3×2）** ＋ **要做的事（三组合一）** ＋ 分视图入口 ＋ 已定事项。
+     ⚠️ 改进点：① 主线定版「连体色带」——六格等宽两行、两端贴齐、底色区分状态，占地小且整齐（用户从 6 份 demo 里选定）；
+     ② "正在做／待办／未了"三块**合成一张「要做的事」卡**，内部按 `正在做 → 近期能收尾 → 长期挂着` 三组排 —— **同一件事只出现一次**。
+     ⛔ **不要做「产物入口／打开文件夹」这类栏位**（2026-10-13 用户实测后令删，根因见 `references/环境注意.md`「预览页面打不开本地文件」）。办结的**当场划掉**；遗留**只在看板一处说**。
+  ※ 形态：细边卡片 · 品牌青绿 `#00C29A` ＋ 灰阶 · **去四角装饰、去全部动效** · 条目可点击打勾（状态存浏览器本地）· 零依赖断网可用。
+  ※ 不进看板：逐条改版记录、最近改动、改动明细。
+
+  ── 怎么加一个视图（如「第 2 讲」）三步 ──
+  ※ **没有顶部导航栏** —— 视图切换只靠总览里的「分视图入口」卡片；子视图顶部放一个「‹ 总览」返回。
+  ※ 点击由脚本统一接管（带 data-go／data-v 即可），**不靠浏览器锚点导航** —— 预览／沙箱里 href="#x" 会被拦。
+  ① 复制一个「子视图 section 块」（下面带 id="view-sub" 的那一整段），改 id，并在其顶部放「‹ 总览」返回
+  ② 在总览的「分视图入口」区加一张入口卡（**必须带 data-go="新id"**）
+  ③ 脚本里的 VIEWS 数组加 '新id'
+  （视图按需增加，不预铺空的；没立项就不要建它的视图）
+
+  ── 占位符 ──
+  {{项目名}} {{一句话方向}} {{当前基线}} {{更新时间}}（短式，如 09-16 15:47，不写年份）
+  {{主线步骤}} 一步一格，**六格 3×2**（步骤多可改 repeat(4,1fr) 或增行），形如：
+      <span class="s done"><em>①</em>接手重启</span>
+      三态：done（已完成，浅绿底）／ doing（在做，实绿底白字）／ wait（还没到，灰底）
+      步骤条下面加一行"现在到哪"：<p class="now">现在：<b>大纲已验收</b>｜下一棒：<b>整套制作</b></p>
+  {{要做的事}} 三组排，同一件事**只写一处**：
+      <div class="grp"><i class="doing"></i>正在做</div>
+      <div class="item"><b>标题</b> —— 说明</div>
+      <div class="grp"><i></i>近期能收尾</div>
+      ...
+      <div class="grp"><i></i>长期挂着</div> ...
+      **没有条目时不要删块**，改成：<div class="empty"><div class="ok">✓</div>暂无待办 —— 一切尽在掌握</div>
+      条目点击即打勾（划线），状态存浏览器本地；办结的当场划掉或删掉。
+  {{分视图入口}} 每个入口一个（**必须带 data-go="子id"**，否则点不动）：<a class="entry" href="#子id" data-go="子id"><span class="ic">📋</span>
+      <span class="tx"><b>标题</b><span>一句话</span></span><span class="ar">›</span></a>
+      （未开放的用 <div class="entry dis">…</div>，图标容器加 class="ic g"）
+  （原 `{{产物}}` 占位符已取消 —— 预览里打不开本地文件夹，别再做这一栏。）
+  {{已定事项}} 每条一组：
+      <div class="tl"><i></i><div><b>09-16</b>决定标题<span>一句话说明</span></div></div>
+      只放仍生效的；旧条目攒到 10 条以上清退一批
+  {{子视图名}} {{子视图副标题}} {{子视图内容}}
+
+  ★ 重建看板时的铁律：内容不许丢
+    旧看板里若有本模板没有的内容（项目自己加的区块、手写的一段话），
+    重建前先抄下来放进新看板对应位置——视图可重建，内容不能丢。
+-->
+<style>
+  :root{
+    /* 2026-10-13 起：对齐「看板重推」版 —— 品牌青绿 ＋ 灰阶、去装饰、无动效 */
+    --bg:#F2F2F2; --card:#FFFFFF; --line:#EBEBEB; --line-2:#E6E6E6;
+    --t1:#1A1A1A; --t2:#5D5D5D; --t3:#8C8C8C; --t4:#BFBFBF;
+    --brand:#00C29A; --brand-soft:#DFF7F2; --brand-deep:#007E66;
+    --green:var(--brand); --green-bg:var(--brand-soft); --green-fg:var(--brand-deep);
+    --cyan:var(--brand);
+    --orange:#FF9D3B; --orange-bg:#FFF3E5; --orange-fg:#C46A0A;
+    --gray:#C4C4C4;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Cascadia Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--t1);
+       font:400 15px/1.7 -apple-system,"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei",sans-serif;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:680px;margin:0 auto;padding:10px 16px 48px}
+
+  /* ── 子视图顶部返回（没有导航栏，返回靠这一行）── */
+  .back{display:inline-flex;align-items:center;gap:4px;font-size:13.5px;color:var(--green);
+        text-decoration:none;padding:6px 0;cursor:pointer;font-weight:500}
+
+  /* ── 视图 ── */
+  .view{display:none;padding-top:18px}
+  .view.on{display:block}
+
+  header.hero{padding:20px 2px 14px}
+  h1{font-size:21px;font-weight:600;margin:0}
+  .meta{font-size:12px;color:var(--t3);margin-top:5px;letter-spacing:.2px}
+  .goal{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;font-size:14px;color:var(--t2)}
+
+  /* ── 区块 ── */
+  .block{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:15px 16px;margin-top:10px}
+  .cnt{font-weight:400;color:var(--t4);margin-left:8px}
+  .arw{float:right;font-weight:400;color:var(--t4)}
+  h2{font-size:12px;font-weight:600;color:var(--t3);margin:0 0 12px;letter-spacing:.5px}
+  h2 .n{display:inline-block;min-width:18px;height:18px;line-height:18px;text-align:center;
+        border-radius:6px;background:var(--green);color:#fff;font-size:11px;margin-right:7px;vertical-align:1px}
+  .fold{cursor:pointer;user-select:none}
+  .freezed{font-size:11px;font-weight:400;letter-spacing:0;color:var(--t3);
+    border:1px solid var(--line-2);border-radius:4px;padding:1px 7px}
+
+  /* ── 主线：连体色带 3×2（2026-10-13 用户选定；步骤多时可改 repeat(4,1fr) 或加行）── */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line-2);border-radius:6px;overflow:hidden}
+  .s{padding:8px 4px;font-size:12px;text-align:center;line-height:1.35;background:#F7F7F7;color:var(--t3);
+     border-right:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
+  .s:nth-child(3n){border-right:none}
+  .s:nth-child(n+4){border-bottom:none}
+  .s em{font-style:normal;display:block;font-size:10px;opacity:.75;line-height:1.2}
+  .s.done{background:var(--green-bg);color:var(--green-fg)}
+  .s.doing{background:var(--green);color:#fff;font-weight:600}
+  .now{margin:11px 0 0;font-size:12.5px;color:var(--t2)}
+  .now b{color:var(--t1)}
+
+  /* ── 要做的事：正在做 / 近期 / 长期 三组合一 ── */
+  .grp{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--t3);
+       margin:13px 0 1px;letter-spacing:.4px}
+  .grp:first-child{margin-top:0}
+  .grp i{width:6px;height:6px;border-radius:50%;background:var(--t4);flex:none}
+  .grp i.doing{background:var(--green)}
+
+  /* ── 清单条目：可点击打勾 ── */
+  .item{font-size:14px;color:var(--t2);padding:7px 0 7px 22px;position:relative;
+        line-height:1.7;cursor:pointer;border-radius:4px}
+  .item:before{content:"";position:absolute;left:2px;top:14px;width:9px;height:9px;border-radius:3px;
+               border:1.5px solid var(--t4);background:#fff}
+  .item.done:before{background:var(--green);border-color:var(--green)}
+  .item.done{color:var(--t3);text-decoration:line-through}
+  .item b{color:var(--t1)}
+  .item.done b{color:var(--t3)}
+
+  /* ──（本版已去掉「产物」栏：预览页面打不开本地文件夹，详见头部说明与环境注意）── */
+  .f em{font-style:normal;flex:none}
+  .f span{margin-left:auto;font-size:11px;color:var(--t4);flex:none;padding-left:8px}
+
+  /* ── 条目列表 / 入口卡 ── */
+  .tl{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)}
+  .tl:last-child{border-bottom:none;padding-bottom:2px}
+  .tl:first-child{padding-top:0}
+  .tl i{width:5px;height:5px;border-radius:50%;flex:none;margin-top:9.5px;background:var(--green)}
+  .tl b{font-weight:400;color:var(--t3);margin-right:8px;font-size:11.5px;white-space:nowrap}
+  .tl div{font-size:13px;line-height:1.7}
+  .tl span{display:block;font-size:12px;color:var(--t2);margin-top:1px}
+  .entry{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);
+         border-radius:8px;padding:12px 14px;margin-top:8px;text-decoration:none;color:var(--t1);cursor:pointer}
+  .entry .ic{width:34px;height:34px;border-radius:6px;flex:none;display:flex;align-items:center;
+             justify-content:center;font-size:15px;background:var(--green-bg)}
+  .entry .ic.g{background:var(--bg)}
+  .entry .tx{flex:1;min-width:0}
+  .entry .tx b{font-size:13.5px}
+  .entry .tx span{display:block;font-size:11.5px;color:var(--t3);margin-top:1px}
+  .entry .ar{color:var(--t4);font-size:15px}
+  .entry.dis{opacity:.55}
+  code{font-size:12px;background:var(--bg);padding:1px 6px;border-radius:3px;color:var(--t2)}
+  .empty{text-align:center;color:var(--t3);font-size:13.5px;padding:14px 0 8px}
+  .empty .ok{width:44px;height:44px;line-height:44px;margin:0 auto 8px;border-radius:50%;
+             background:var(--green-bg);color:var(--green);font-size:20px}
+  footer{margin-top:18px;font-size:11.5px;color:var(--t3);line-height:1.9;text-align:center}
+
+  /* ── 动效已移除（2026-10-13：看板重推版要求"流程区视觉要稳、不上动效"）── */
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<!-- ═══════════ 视图 1 · 总览 ═══════════ -->
+<section id="view-home" class="view on">
+  <header class="hero">
+    <h1>{{项目名}}</h1>
+    <div class="meta">当前基线 {{当前基线}} ｜ 更新 {{更新时间}}</div>
+  </header>
+
+  <div class="goal">{{一句话方向}}</div>
+
+  <div class="block">
+    <h2>主线<span class="freezed">已定死 · 只改状态</span></h2>
+    <div class="steps">
+      <span class="s done"><em>①</em>步骤一</span>
+      <span class="s done"><em>②</em>步骤二</span>
+      <span class="s doing"><em>③</em>步骤三</span>
+      <span class="s wait"><em>④</em>步骤四</span>
+      <span class="s wait"><em>⑤</em>步骤五</span>
+      <span class="s wait"><em>⑥</em>步骤六</span>
+    </div>
+    <p class="now">现在：<b>{{当前重点}}</b></p>
+  </div>
+
+  <div class="block">
+    <h2 class="fold" onclick="toggle('jobs')">要做的事<span class="cnt" id="jobs-count"></span><span class="arw" id="jobs-arrow">收起 ▴</span></h2>
+    <div id="jobs-body">
+      <div class="grp"><i class="doing"></i>正在做</div>
+      {{正在做}}
+      <div class="grp"><i></i>近期能收尾</div>
+      {{近期待办}}
+      <div class="grp"><i></i>长期挂着</div>
+      {{未了清单}}
+      <!-- 每条：<div class="item"><b>标题</b> —— 说明</div>
+           **同一件事只写一处**（分块时最常犯的错：正在做与待办重复）。
+           没有条目时不要删块，改成：<div class="empty"><div class="ok">✓</div>暂无待办 —— 一切尽在掌握</div>
+           条目点击即打勾（划线），状态存浏览器本地；办结的当场划掉或删掉。 -->
+    </div>
+  </div>
+
+  <h2 style="margin:18px 2px 0;font-size:12.5px;color:var(--t3)">分视图入口</h2>
+  <!-- 每个入口一张卡，**必须带 data-go="子id"**，否则点不动。成品示例（照抄改字即可）：
+  <a class="entry" href="#第2讲" data-go="第2讲"><span class="ic">📋</span><span class="tx"><b>第 2 讲</b><span>讲稿与课件 · 进行中</span></span><span class="ar">›</span></a>
+  未开放的写：<div class="entry dis"><span class="ic g">📋</span><span class="tx"><b>第 3 讲</b><span>还没到</span></span><span class="ar">›</span></div>
+  -->
+  {{分视图入口}}
+
+  <!--（本版已去掉「产物」栏）-->
+
+  <div class="block">
+    <h2 class="fold" onclick="toggle('done')">已定事项<span class="cnt" id="done-count"></span><span class="arw" id="done-arrow">展开 ▾</span></h2>
+    <div id="done-body" style="display:none">
+      {{已定事项}}
+      <!-- 每条一组：<div class="tl"><i></i><div><b>09-16</b>决定标题<span>一句话说明</span></div></div>
+           只放仍生效的；旧条目攒到 10 条以上清退一批 -->
+    </div>
+  </div>
+
+  <footer>点条目可打勾 · 状态存在本机浏览器<br>想改什么直接说：「这条撤下」「加一条：…」「这块并进那块」。</footer>
+</section>
+
+<!-- ═══════════ 视图 2 · 子视图（示例，按需增删）═══════════ -->
+<section id="view-sub" class="view">
+  <a class="back" data-go="home">‹ 总览</a>
+  <header class="hero">
+    <h1>{{子视图名}}</h1>
+    <div class="meta">{{子视图副标题}}</div>
+  </header>
+
+  {{子视图内容}}
+
+  <footer>按需增删本视图；不要预铺空视图。</footer>
+</section>
+
+</div>
+
+<script>
+/* ── 视图切换（无导航栏，靠 data-go 卡片）── */
+(function(){
+  var VIEWS=['home','sub'];
+  function show(v,fromHash){
+    if(VIEWS.indexOf(v)<0) v='home';
+    for(var i=0;i<VIEWS.length;i++){
+      var sec=document.getElementById('view-'+VIEWS[i]);
+      if(sec) sec.classList.toggle('on',VIEWS[i]===v);
+    }
+    try{ window.scrollTo(0,0); }catch(e){}
+    if(!fromHash){ try{ if(location.hash!=='#'+v) location.hash=v; }catch(e){} }
+  }
+  /* 关键：直接接管点击 —— 不依赖浏览器锚点导航（预览/沙箱里导航可能被拦） */
+  document.addEventListener('click',function(ev){
+    var el=ev.target;
+    while(el && el !== document){
+      if(el.getAttribute){
+        var v=el.getAttribute('data-go')||el.getAttribute('data-v');
+        if(v){ if(ev.preventDefault) ev.preventDefault(); show(v); return; }
+      }
+      el=el.parentNode;
+    }
+  });
+  window.addEventListener('hashchange',function(){ show(location.hash.replace('#','')||'home',true); });
+  show(location.hash.replace('#','')||'home',true);
+})();
+
+/* ── 折叠 ＋ 打勾 ──
+   新增一块可折叠清单时：复制一份 block（含 h2 的 onclick 与 id），把前缀加进 FOLD。 */
+var FOLD=['jobs','done'];
+function cp(btn){
+  var p=btn.getAttribute('data-path');
+  function ok(){ btn.textContent='已复制 ✓'; setTimeout(function(){ btn.textContent='复制路径'; },1500); }
+  function fail(){ btn.textContent='复制失败，请手动抄'; }
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(p).then(ok, fail);
+    } else { fail(); }
+  }catch(e){ fail(); }
+}
+function toggle(k){
+  var b=document.getElementById(k+'-body'), a=document.getElementById(k+'-arrow');
+  if(!b) return;
+  var hide = b.style.display !== 'none';
+  b.style.display = hide ? 'none' : '';
+  if(a) a.textContent = hide ? '展开 ▾' : '收起 ▴';
+  try{ localStorage.setItem('collapse-'+k, hide ? '1' : '0'); }catch(e){}
+}
+function count(k){
+  var items=document.querySelectorAll('#'+k+'-body .item'), left=0;
+  for(var i=0;i<items.length;i++){ if(!items[i].classList.contains('done')) left++; }
+  var c=document.getElementById(k+'-count'); if(c) c.textContent = left + ' / ' + items.length;
+}
+(function(){
+  for(var j=0;j<FOLD.length;j++){
+    var k=FOLD[j];
+    try{
+      if(localStorage.getItem('collapse-'+k)==='1'){
+        var b=document.getElementById(k+'-body'), a=document.getElementById(k+'-arrow');
+        if(b){ b.style.display='none'; if(a) a.textContent='展开 ▾'; }
+      }
+    }catch(e){}
+    count(k);
+  }
+})();
+(function(){
+  var KEY='board-done', done=[];
+  try{ done = JSON.parse(localStorage.getItem(KEY) || '[]'); }catch(e){ done=[]; }
+  var items=document.querySelectorAll('#jobs-body .item');   /* 只有「要做的事」可打勾 */
+  function save(){
+    var arr=[];
+    for(var i=0;i<items.length;i++){
+      if(items[i].classList.contains('done')) arr.push(items[i].textContent.trim().slice(0,40));
+    }
+    try{ localStorage.setItem(KEY, JSON.stringify(arr)); }catch(e){}
+    count('jobs');
+  }
+  for(var i=0;i<items.length;i++){
+    (function(el){
+      var t = el.textContent.trim().slice(0,40);
+      if(done.indexOf(t) >= 0) el.classList.add('done');
+      el.addEventListener('click', function(){ el.classList.toggle('done'); save(); });
+    })(items[i]);
+  }
+  count('jobs');
+})();
+</script>
+<noscript><style>.view{display:block!important}.task[open] summary{border-bottom:1px solid #EBEBEB}</style></noscript>
+</body>
+</html>
