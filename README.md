@@ -1,5 +1,7 @@
 # 工作空间优化
 
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC_BY--NC--SA_4.0-blue)](LICENSE)
+
 一个给 AI 助手用的技能：让持续几天、几十轮的项目**不失忆**。
 
 进度看得见、决定可追溯、换个对话三十秒接上。
