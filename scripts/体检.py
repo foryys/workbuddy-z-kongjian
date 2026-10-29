@@ -2,8 +2,9 @@
 """工作空间体检（**只读**，不改任何文件）
 
 用法：
-    python 体检.py                      # 体检当前目录
-    python 体检.py <项目根路径>          # 体检指定项目
+    python 体检.py                          # 体检当前目录（自动判文本型／代码型）
+    python 体检.py <项目根路径>              # 体检指定项目
+    python 体检.py <项目根> --type text      # 手动指定型：text / code（判错时用）
 
 输出两块：
     A. 目录体检 —— 一级目录数 / 项目根文件数 / .workbuddy 顶层数 / 顶层散文件数 / archive 顶层条目数 / output 顶层散文件数
@@ -19,6 +20,32 @@ from pathlib import Path
 
 KB = 1024
 MB = KB * 1024
+
+# ── 项目型判定（2026-10-29 加）──────────────────────────────────────
+# 两型的差别只有一条：数不数一级目录个数。
+#   文本型 → 一级目录 ≤3（archive/ output/ .workbuddy/）
+#   代码型 → 不数个数（src/ bin/ 由代码本身决定，硬压只会逼人往根上乱塞），
+#            改判「源码夹与产物夹各一个 ＋ 根散文件 ≤6」
+# 判错的代价很小：命令行 --type text / --type code 手动指定即可。
+CODE_MARKER_FILES = ("go.mod", "package.json", "pom.xml", "requirements.txt",
+                     "Cargo.toml", "build.gradle", "CMakeLists.txt", "pyproject.toml")
+CODE_MARKER_GLOBS = ("*.sln", "*.csproj", "*.vcxproj", "*.pro")
+CODE_MARKER_DIRS = ("src", "bin", "dist", "app")
+DASHBOARD = "看板.html"  # 模板就放 .workbuddy/ 下，不算散件、不占顶层名额
+
+
+def detect_project_type(root: Path) -> str:
+    """只看项目根这一层。认不出来按 text 处理（保守：宁可多提醒，不会漏清）。"""
+    for name in CODE_MARKER_FILES:
+        if (root / name).exists():
+            return "code"
+    for pat in CODE_MARKER_GLOBS:
+        if any(root.glob(pat)):
+            return "code"
+    for name in CODE_MARKER_DIRS:
+        if (root / name).is_dir():
+            return "code"
+    return "text"
 
 # ── 阈值（与 SKILL 第六节判定总表一致，改这里就是改口径）────────────────
 DIR_LIMITS = {
@@ -84,20 +111,29 @@ def check(label: str, value, limit=None, bytes_mode: bool = False) -> str:
     return f"{flag} {label:<36} {shown}  （上限 {cap}）"
 
 
-def dir_audit(root: Path) -> list:
+def dir_audit(root: Path, ptype: str) -> list:
     """目录体检五项"""
     out = []
     entries = [p for p in root.iterdir() if p.name != ".git"]
     dirs = [p for p in entries if p.is_dir()]
     files = [p for p in entries if p.is_file()]
-    out.append(check("一级目录数", len(dirs), DIR_LIMITS["一级目录数"]))
+
+    if ptype == "code":
+        out.append("      项目型：**代码型** → 一级目录只报数不判超（看根散文件 ≤6、源码夹与产物夹各一个）")
+        out.append(check("一级目录数", len(dirs)))
+        out.append("       目录清单：" + ("、".join(sorted(p.name for p in dirs)) or "无"))
+    else:
+        out.append("      项目型：**文本型** → 一级目录 ≤3（archive/ output/ .workbuddy/）")
+        out.append(check("一级目录数", len(dirs), DIR_LIMITS["一级目录数"]))
     out.append(check("项目根文件数", len(files), DIR_LIMITS["项目根文件数"]))
 
     wb = root / ".workbuddy"
     if wb.is_dir():
         wb_entries = list(wb.iterdir())
-        wb_files = [p for p in wb_entries if p.is_file()]
-        out.append(check(".workbuddy 顶层数", len(wb_entries), DIR_LIMITS[".workbuddy 顶层数"]))
+        # 看板放 .workbuddy/ 是模板口径，不算散件、不占顶层名额
+        counted = [p for p in wb_entries if p.name != DASHBOARD]
+        wb_files = [p for p in counted if p.is_file()]
+        out.append(check(".workbuddy 顶层数", len(counted), DIR_LIMITS[".workbuddy 顶层数"]))
         out.append(check(".workbuddy 顶层散文件数", len(wb_files), DIR_LIMITS[".workbuddy 顶层散文件数"]))
         if wb_files:
             out.append("       散文件清单：" + "、".join(p.name for p in wb_files))
@@ -109,7 +145,7 @@ def dir_audit(root: Path) -> list:
         out.append(check("archive 顶层条目数", len(list(arc.iterdir()))))
 
     # ── output/ 顶层散件：应按客户端会话名归进任务文件夹 ──────────────────
-    # 命名规则见 references/目录纪律.md「任务文件夹怎么命名」。
+    # 命名规则见 project-rules.md「output/ 的任务文件夹名 ＝ 客户端会话名」。
     # 这里只报数（散件清单），不判归属 —— 归属要查客户端会话名，脚本不连库。
     outd = root / "output"
     if outd.is_dir():
@@ -239,16 +275,30 @@ def size_audit(root: Path) -> list:
 
 
 def main() -> int:
-    root = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path.cwd()
+    forced, rest = None, []
+    it = iter(sys.argv[1:])
+    for a in it:
+        if a == "--type":
+            forced = next(it, None)
+        elif a.startswith("--type="):
+            forced = a.split("=", 1)[1]
+        else:
+            rest.append(a)
+    if forced not in (None, "text", "code"):
+        print("--type 只接受 text 或 code")
+        return 3
+
+    root = Path(rest[0]).resolve() if rest else Path.cwd()
     if not root.is_dir():
         print(f"路径不存在：{root}")
         return 2
+    ptype = forced or detect_project_type(root)
 
     print("=" * 70)
     print(f"工作空间体检（只读）  {root}")
     print("=" * 70)
     print("\n【A】目录体检")
-    for line in dir_audit(root):
+    for line in dir_audit(root, ptype):
         print("  " + line)
     print("\n【B】体积体检")
     for line in size_audit(root):
