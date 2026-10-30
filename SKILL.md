@@ -1,6 +1,5 @@
 ---
 name: workbuddy-z-kongjian
-display_name: "工作空间优化"
 description: 个人项目的一站式规矩入口：开新项目铺骨架、接手已有项目、技能升级后把老项目对齐、每回合开工与收尾，自带规则原件、模板与体检脚本。触发词：启动项目｜新建项目｜铺骨架｜接手项目｜迁移｜清空重做｜升级项目｜项目升级｜同步规则｜开工｜继续做｜收尾｜瘦身｜目录太多｜文件夹太多｜整理目录｜体检。
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep
 agent_created: true

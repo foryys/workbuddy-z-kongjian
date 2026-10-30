@@ -103,7 +103,7 @@ workbuddy-z-kongjian/
   ```bash
   python scripts/体检.py [项目根目录]   # 不传则体检当前目录
   ```
-- `references/环境注意.md` 里大量条目来自 **Windows** 实测（盘符、回收站、命令行编码）。macOS / Linux 上这部分不完全适用，按需忽略。
+- 不少条目来自 **Windows** 实测（盘符、回收站、命令行编码），集中在 `references/删除与归档.md` 与 `references/判据与阈值.md`。macOS / Linux 上这部分不完全适用，按需忽略。
 
 ## 许可证
 
