@@ -79,7 +79,7 @@ git clone https://github.com/foryys/workbuddy-z-kongjian.git
 ```
 workbuddy-z-kongjian/
 ├── SKILL.md                 主入口：只做路由，不装细节（AI 每一回合都读这份）
-├── references/              六个执行件，按「你要干的动作」切
+├── references/              五个执行件，按「你要干的动作」切
 │   ├── 铺骨架.md            空项目怎么铺、已有项目怎么接手、已铺的怎么升级
 │   ├── 开工与收尾.md        会话开始四步、结束四件事、日志归档三件套
 │   ├── 判据与阈值.md        所有可判数字的唯一出处：体量、目录、去留、卡顿
