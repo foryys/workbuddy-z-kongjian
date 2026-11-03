@@ -49,7 +49,7 @@
 
 ## 它怎么运转
 
-<img src="docs/skill-architecture-flow.svg" alt="架构与数据流转：一句话触发 → SKILL.md 路由 → 六个执行件按需读 → 落盘到项目 → 下一轮开工读副本" width="100%">
+<img src="docs/skill-architecture-flow.svg" alt="架构与数据流转：一句话触发 → SKILL.md 路由 → 五个执行件按需读 → 落盘到项目 → 下一轮开工读副本" width="100%">
 
 一句话触发 → 主入口路由 → 按需读细节 → 产物落进项目目录 → 下一轮「开工」从落盘处接上。
 
