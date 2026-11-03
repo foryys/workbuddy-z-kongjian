@@ -4,8 +4,8 @@
 
 | 用途 | 位置 | 值 |
 |---|---|---|
-| 机器标识 | `SKILL.md` frontmatter 的 `name:`、目录名 | 英文，如 `ath-media` |
-| 界面显示 | 同目录 `_marketplace_meta.json` 的 `name` | 中文，如 `ATH-素材生成` |
+| 机器标识 | `SKILL.md` frontmatter 的 `name:`、目录名 | 英文，如 `ath-sample` |
+| 界面显示 | 同目录 `_marketplace_meta.json` 的 `name` | 中文，如 `ATH-示例技能` |
 
 两者并存，互不覆盖。斜杠命令走 `name`（英文），设置页与技能列表走 `_marketplace_meta.json`（中文）。
 
@@ -15,9 +15,9 @@
 2. 跨平台通用（agent to human）：`ATH-中文名`
 3. 前缀大写照写，后面直接接中文，不空格、不加下划线。
 
-示例：
+示例（名字是编的，只看格式）：
 - `Workbuddy-Z-会话重命名`
-- `ATH-素材生成`
+- `ATH-示例技能`
 
 ## 三、写显示名的文件
 
@@ -25,7 +25,7 @@
 
 ```json
 {
-  "name": "ATH-素材生成",
+  "name": "ATH-示例技能",
   "source": "local"
 }
 ```
